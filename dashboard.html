@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | EduTrack Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>console.warn = () => {};</script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+    <div class="min-h-screen flex flex-col">
+        <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center space-x-8">
+                        <span class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">EduTrack Pro</span>
+                        <div class="flex flex-wrap gap-1 md:space-x-2">
+                            <a href="dashboard.html" class="text-indigo-400 font-medium px-3 py-2 rounded-xl text-sm bg-indigo-500/10 border border-indigo-500/20">Dashboard</a>
+                            <a href="students.html" class="text-slate-400 hover:text-slate-200 font-medium px-3 py-2 rounded-xl text-sm transition">Student Directory</a>
+                            <a href="grades.html" class="text-slate-400 hover:text-slate-200 font-medium px-3 py-2 rounded-xl text-sm transition">Gradebook</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button onclick="logout()" class="text-xs font-semibold uppercase tracking-wider text-rose-400 hover:text-rose-300 transition px-3 py-1.5 border border-rose-500/20 rounded-lg bg-rose-500/5">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+            <div class="relative bg-gradient-to-r from-indigo-900 to-slate-900 rounded-3xl p-6 md:p-8 border border-indigo-500/10 shadow-xl overflow-hidden mb-8">
+                <div class="relative z-10">
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Academic Analytics & Performance System</h1>
+                    <p class="text-slate-300 text-sm mt-2 max-w-xl">All statistical metrics and analytics charts are automatically updated based on current student directory records.</p>
+                </div>
+                <div class="absolute right-0 bottom-0 top-0 w-1/3 bg-gradient-to-l from-indigo-500/10 to-transparent pointer-events-none"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden group">
+                    <p class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Total Active Students</p>
+                    <p id="totalStudents" class="text-4xl font-bold mt-2 text-white">0</p>
+                    <div class="absolute right-4 bottom-4 text-2xl text-slate-800 group-hover:text-indigo-500/20 transition">👥</div>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden group">
+                    <p class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Overall Class GPA Average</p>
+                    <p id="averageGpa" class="text-4xl font-bold mt-2 text-indigo-400">0.00</p>
+                    <div class="absolute right-4 bottom-4 text-2xl text-slate-800 group-hover:text-indigo-500/20 transition">📈</div>
+                </div>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm relative overflow-hidden group">
+                    <p class="text-xs font-semibold uppercase text-slate-400 tracking-wider">Cohort Passing Rate</p>
+                    <p id="passingRate" class="text-4xl font-bold mt-2 text-emerald-400">0.0%</p>
+                    <div class="absolute right-4 bottom-4 text-2xl text-slate-800 group-hover:text-emerald-500/20 transition">🎯</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span> 1. Subject Average Scores (%)
+                    </h3>
+                    <div class="h-64"><canvas id="performanceChart"></canvas></div>
+                </div>
+
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span> 2. Student Distribution by Program
+                    </h3>
+                    <div class="h-64"><canvas id="courseDistributionChart"></canvas></div>
+                </div>
+
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-400"></span> 3. Student Grade Classifications
+                    </h3>
+                    <div class="h-64"><canvas id="gradeTierChart"></canvas></div>
+                </div>
+
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span> 4. Passing Rate per Subject (%)
+                    </h3>
+                    <div class="h-64"><canvas id="subjectPassingChart"></canvas></div>
+                </div>
+
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-fuchsia-400"></span> 5. Highest and Lowest Mark Spreads
+                    </h3>
+                    <div class="h-64"><canvas id="markSpreadChart"></canvas></div>
+                </div>
+
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> 6. GPA Average Cumulative Trend
+                    </h3>
+                    <div class="h-64"><canvas id="gpaTrendChart"></canvas></div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof updateDashboardStats === "function") updateDashboardStats();
+            
+            let localData = localStorage.getItem('students');
+            let studentList = localData ? JSON.parse(localData) : [];
+
+            if(studentList.length === 0) {
+                studentList = [
+                    { id: "DEMO1", name: "Sample A", course: "Computer Science", webMark: 80, dbMark: 70, mathMark: 75 },
+                    { id: "DEMO2", name: "Sample B", course: "Software Engineering", webMark: 40, dbMark: 50, mathMark: 45 }
+                ];
+            }
+
+            let totalWeb = 0, totalDb = 0, totalMath = 0;
+            let countCS = 0, countIS = 0, countSE = 0;
+            let countDistinction = 0, countPass = 0, countIntervention = 0;
+            let passWeb = 0, passDb = 0, passMath = 0;
+            let webMarks = [], dbMarks = [], mathMarks = [];
+            let gpaTrendLabels = [];
+            let gpaTrendData = [];
+            let runningGpaSum = 0;
+
+            studentList.forEach((st, index) => {
+                let w = st.webMark || 0;
+                let d = st.dbMark || 0;
+                let m = st.mathMark || 0;
+
+                totalWeb += w; totalDb += d; totalMath += m;
+                webMarks.push(w); dbMarks.push(d); mathMarks.push(m);
+
+                let courseName = (st.course || '').toLowerCase();
+                if(courseName.includes('computer')) countCS++;
+                else if(courseName.includes('information')) countIS++;
+                else countSE++;
+
+                let avg = (w + d + m) / 3;
+                let currentGpa = 1.0;
+                if (avg >= 75) { countDistinction++; currentGpa = 4.0; }
+                else if (avg >= 50) { countPass++; currentGpa = 2.67; }
+                else { countIntervention++; currentGpa = 1.33; }
+
+                runningGpaSum += currentGpa;
+                gpaTrendLabels.push(st.name.split(' ')[0]);
+                gpaTrendData.push((runningGpaSum / (index + 1)).toFixed(2));
+
+                if(w >= 50) passWeb++;
+                if(d >= 50) passDb++;
+                if(m >= 50) passMath++;
+            });
+
+            let num = studentList.length;
+            let avgWeb = (totalWeb / num).toFixed(0);
+            let avgDb = (totalDb / num).toFixed(0);
+            let avgMath = (totalMath / num).toFixed(0);
+
+            let pctPassWeb = ((passWeb / num) * 100).toFixed(0);
+            let pctPassDb = ((passDb / num) * 100).toFixed(0);
+            let pctPassMath = ((passMath / num) * 100).toFixed(0);
+
+            let maxWeb = Math.max(...webMarks), minWeb = Math.min(...webMarks);
+            let maxDb = Math.max(...dbMarks), minDb = Math.min(...dbMarks);
+            let maxMath = Math.max(...mathMarks), minMath = Math.min(...mathMarks);
+
+            // Chart 1: Subject Average
+            new Chart(document.getElementById('performanceChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Web Design', 'Database Systems', 'Mathematics'],
+                    datasets: [{
+                        data: [avgWeb, avgDb, avgMath],
+                        backgroundColor: 'rgba(99, 102, 241, 0.3)',
+                        borderColor: '#6366f1',
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100, grid: { color: '#1e293b' } }, x: { grid: { display: false } } } }
+            });
+
+            // Chart 2: Course Distribution
+            new Chart(document.getElementById('courseDistributionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Computer Science', 'Information Systems', 'Software Eng.'],
+                    datasets: [{
+                        data: [countCS, countIS, countSE],
+                        backgroundColor: ['#22d3ee', '#818cf8', '#a78bfa'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } } }
+            });
+
+            // Chart 3: Grade Tiers
+            new Chart(document.getElementById('gradeTierChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Distinction', 'Pass', 'Needs Help'],
+                    datasets: [{
+                        data: [countDistinction, countPass, countIntervention],
+                        backgroundColor: ['#34d399', '#fbbf24', '#f87171'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } } }
+            });
+
+            // Chart 4: Passing Rate
+            new Chart(document.getElementById('subjectPassingChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Web Design', 'Database Systems', 'Mathematics'],
+                    datasets: [{
+                        label: 'Passing Rate (%)',
+                        data: [pctPassWeb, pctPassDb, pctPassMath],
+                        backgroundColor: 'rgba(52, 211, 153, 0.1)',
+                        borderColor: '#34d399',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#34d399'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: '#1e293b' }, grid: { color: '#1e293b' }, pointLabels: { color: '#94a3b8' }, ticks: { display: false }, min: 0, max: 100 } } }
+            });
+
+            // Chart 5: Mark Spread
+            new Chart(document.getElementById('markSpreadChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Web Design', 'Database', 'Mathematics'],
+                    datasets: [
+                        { label: 'Highest Mark', data: [maxWeb, maxDb, maxMath], backgroundColor: '#c084fc', borderRadius: 4 },
+                        { label: 'Lowest Mark', data: [minWeb, minDb, minMath], backgroundColor: '#f472b6', borderRadius: 4 }
+                    ]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } }, scales: { x: { beginAtZero: true, max: 100, grid: { color: '#1e293b' } }, y: { grid: { display: false } } } }
+            });
+
+            // Chart 6: GPA Trend
+            new Chart(document.getElementById('gpaTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: gpaTrendLabels,
+                    datasets: [{
+                        data: gpaTrendData,
+                        borderColor: '#f43f5e',
+                        backgroundColor: 'rgba(244, 63, 94, 0.05)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 3
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0.0, max: 4.0, grid: { color: '#1e293b' } }, x: { grid: { display: false } } } }
+            });
+        });
+    </script>
+</body>
+</html>

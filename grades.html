@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradebook | EduTrack Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>console.warn = () => {};</script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+
+    <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <span class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">EduTrack Pro</span>
+                    <div class="flex flex-wrap gap-1 md:space-x-2">
+                        <a href="dashboard.html" class="text-slate-400 hover:text-slate-200 font-medium px-3 py-2 rounded-xl text-sm transition">Dashboard</a>
+                        <a href="students.html" class="text-slate-400 hover:text-slate-200 font-medium px-3 py-2 rounded-xl text-sm transition">Student Directory</a>
+                        <a href="grades.html" class="text-indigo-400 font-medium px-3 py-2 rounded-xl text-sm bg-indigo-500/10 border border-indigo-500/20">Gradebook</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold tracking-tight">Academic Gradebook Records</h1>
+            <p class="text-sm text-slate-400">Detailed breakdown of student scoring and academic performance across subjects.</p>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-6 flex flex-wrap gap-2 items-center justify-between">
+            <div class="flex flex-wrap gap-2">
+                <button onclick="filterGrades('all')" class="px-3.5 py-1.5 text-xs font-semibold bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition">All Students</button>
+                <button onclick="filterGrades('distinction')" class="px-3.5 py-1.5 text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300 rounded-lg hover:text-white transition">Distinction</button>
+                <button onclick="filterGrades('passing')" class="px-3.5 py-1.5 text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300 rounded-lg hover:text-white transition">Pass Status</button>
+                <button onclick="filterGrades('intervention')" class="px-3.5 py-1.5 text-xs font-semibold bg-rose-950 border border-rose-800 text-rose-400 rounded-lg hover:bg-rose-900 transition">Needs Help</button>
+            </div>
+            <div class="text-xs text-slate-500 font-mono">Data Filtering Active</div>
+        </div>
+
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-sm overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-slate-800 text-xs font-semibold uppercase text-slate-400 tracking-wider">
+                        <th class="pb-3">Student Name</th>
+                        <th class="pb-3">Web Design</th>
+                        <th class="pb-3">Database Systems</th>
+                        <th class="pb-3">Mathematics</th>
+                        <th class="pb-3 text-right">Performance Status</th>
+                    </tr>
+                </thead>
+                <tbody id="gradesTableBody" class="text-sm divide-y divide-slate-800/40">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof displayGrades === "function") displayGrades('all');
+        });
+    </script>
+</body>
+</html>
